@@ -21,7 +21,7 @@ import com.israel.gadstoplearners.models.Leader;
 import java.util.Collections;
 import java.util.List;
 
-public class LearnerFragment extends Fragment {
+public class SkillIQFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class LearnerFragment extends Fragment {
         LeaderViewModel viewModel = new ViewModelProvider(this, factory).get(LeaderViewModel.class);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        viewModel.getTopLearners("hours");
+        viewModel.getTopLearners("skilliq");
         viewModel.getError().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {

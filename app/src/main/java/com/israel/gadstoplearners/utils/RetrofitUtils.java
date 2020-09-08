@@ -15,10 +15,9 @@ public class RetrofitUtils {
     public static final int CONNECTION_TIMEOUT = 20;
     public static final int READ_TIMEOUT = 30;
     public static final int WRITE_TIMEOUT = 30;
-    private static final String BASE_URL = "https://gadsapi.herokuapp.com/";
     private static Retrofit mRetrofit;
 
-    public static Retrofit getRetrofitClient(){
+    public static Retrofit getRetrofitClient(String baseUrl){
         if (mRetrofit == null){
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -38,7 +37,7 @@ public class RetrofitUtils {
                         }
                     }).build();
             mRetrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();

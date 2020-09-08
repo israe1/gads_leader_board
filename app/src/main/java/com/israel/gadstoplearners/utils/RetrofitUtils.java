@@ -15,10 +15,13 @@ public class RetrofitUtils {
     public static final int CONNECTION_TIMEOUT = 20;
     public static final int READ_TIMEOUT = 30;
     public static final int WRITE_TIMEOUT = 30;
-    private static Retrofit mRetrofit;
+    private static final String BASE_URL = "https://gadsapi.herokuapp.com/";
+    private static final String SUBMISSION_BASE_URL = "https://docs.google.com/forms/d/e/";
+    private static Retrofit mRetrofitLeader;
+    private static Retrofit mRetrofitSubmission;
 
-    public static Retrofit getRetrofitClient(String baseUrl){
-        if (mRetrofit == null){
+    public static Retrofit getLeadersClient(){
+        if (mRetrofitLeader == null){
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -36,12 +39,40 @@ public class RetrofitUtils {
                             return chain.proceed(builder.build());
                         }
                     }).build();
-            mRetrofit = new Retrofit.Builder()
-                    .baseUrl(baseUrl)
+            mRetrofitLeader = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();
         }
-        return mRetrofit;
+        return mRetrofitLeader;
+    }
+
+    public static Retrofit getSubmissionClient(){
+        if (mRetrofitSubmission == null){
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .addInterceptor(logging)
+                    .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS)
+                    .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
+                    .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
+                    .addNetworkInterceptor(new Interceptor() {
+                        @Override
+                        public Response intercept(Chain chain) throws IOException {
+                            Request.Builder builder = chain.request()
+                                    .newBuilder()
+                                    .addHeader("Connection", "close");
+                            return chain.proceed(builder.build());
+                        }
+                    }).build();
+            mRetrofitSubmission = new Retrofit.Builder()
+                    .baseUrl(SUBMISSION_BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
+                    .build();
+        }
+        return mRetrofitSubmission;
     }
 }
